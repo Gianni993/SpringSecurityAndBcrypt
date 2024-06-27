@@ -35,10 +35,11 @@ public class MemberRestController {
 
     @PutMapping("/member")
     public Member update(@RequestBody Member theMember){
+
         return memberService.update(theMember);
     }
 
-    @DeleteMapping("/member")
+    @DeleteMapping("/member/{memberId}")
     public String deleteMember(@PathVariable String memberId){
 
         return memberService.deleteById(memberId);

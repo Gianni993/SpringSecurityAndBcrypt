@@ -1,9 +1,9 @@
 package com.luv2code.springboot.cruddemo.service;
 
-import com.luv2code.springboot.cruddemo.dao.MemeberRepository;
+import com.luv2code.springboot.cruddemo.dao.MemberRepository;
 
-import com.luv2code.springboot.cruddemo.entity.Employee;
 import com.luv2code.springboot.cruddemo.entity.Member;
+import com.luv2code.springboot.cruddemo.security.Bcrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +12,13 @@ import java.util.Optional;
 
 @Service
 public class MemberServiceImpl implements MemberService {
-    private MemeberRepository memberRepository;
+    private MemberRepository memberRepository;
+    private Bcrypt bcrypt;
 
     @Autowired
-    public MemberServiceImpl(MemeberRepository memeberRepository) {
-        this.memberRepository = memeberRepository;
+    public MemberServiceImpl(Bcrypt bcrypt , MemberRepository memberRepository) {
+        this.bcrypt = bcrypt;
+        this.memberRepository = memberRepository;
     }
 
     @Override
@@ -42,11 +44,11 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member save(Member theMember) {
 
-        if(findById(theMember.getUserId()) != null){
-            throw new RuntimeException("There is already a member with this id");
-        }
 
-        return memberRepository.save(theMember);
+        theMember.setPw(bcrypt.encodePsw(theMember.getPw()));
+        System.out.println(theMember.getPw());
+        memberRepository.save(theMember.getUserId(),theMember.getPw(),theMember.isActive());
+        return findById(theMember.getUserId());
     }
 
     @Override

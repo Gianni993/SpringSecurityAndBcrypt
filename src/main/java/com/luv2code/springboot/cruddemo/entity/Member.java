@@ -2,6 +2,8 @@ package com.luv2code.springboot.cruddemo.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name="members")
 public class Member {
@@ -11,6 +13,10 @@ public class Member {
     @Column(name="user_id")
     private String userId;
 
+    @OneToMany(mappedBy = "member",
+            cascade = {CascadeType.REMOVE})
+    private List<Roles> roles;
+
     @Column(name="pw")
     private String pw;
 
@@ -18,12 +24,6 @@ public class Member {
     private boolean active;
 
     public Member() {
-    }
-
-    public Member(String userId, String pw, boolean active) {
-        this.userId = userId;
-        this.pw = pw;
-        this.active = active;
     }
 
     public String getUserId() {
@@ -52,8 +52,8 @@ public class Member {
 
     @Override
     public String toString() {
-        return "Memeber{" +
-                "userId='" + userId + '\'' +
+        return "Member{" +
+                "userId=" + userId +
                 ", pw='" + pw + '\'' +
                 ", active=" + active +
                 '}';
